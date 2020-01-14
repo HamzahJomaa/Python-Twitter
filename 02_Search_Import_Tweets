@@ -1,0 +1,33 @@
+# import Libararies
+import codecs
+import csv
+import tweepy
+
+# intilaizing tokens
+
+consumer_key = 'XXXXXXXXXXXXXXXXXXXXX'
+consumer_secret = 'XXXXXXXXXXXXXXXXXXXXX'
+access_token = 'XXXXXXXXXXXXXXXXXXXXX'
+access_token_secret = 'XXXXXXXXXXXXXXXXXXXXX'
+
+# pass twitter credentials to tweepy
+auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+auth.set_access_token(access_token, access_token_secret)
+api = tweepy.API(auth)
+
+csvFile = codecs.open("DRAFT.csv", "wb", "utf-8")
+
+# Use csv writer
+csvWriter = csv.writer(csvFile)
+
+csvWriter.writerow(
+    ['Created_At', 'Username', 'Followers_Number', 'Tweet_Text', 'Tweet_Likes', 'Tweet_Retweets', 'Tweet_Location'])
+for tweet in tweepy.Cursor(api.search,
+                           q="TwitterAPI",
+                           since="2020-1-1",
+                           lang="en").items():
+    print(tweet)
+    csvWriter.writerow(
+        [tweet.created_at, tweet.user.name.encode('utf-8'), tweet.user.followers_count, tweet.text,
+         tweet.favorite_count,
+         tweet.retweet_count, tweet.user.location])
